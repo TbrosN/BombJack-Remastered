@@ -1,5 +1,7 @@
 # Bomb Jack Recreation
 
+[Watch the game video](./bombjack-demo.mov)
+
 ## About
 This is a fan-made recreation of the classic arcade game Bomb Jack. It is developed for educational and showcase purposes only. This project is not affiliated with or endorsed by the original creators or copyright holders of Bomb Jack.
 
