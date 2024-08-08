@@ -1,6 +1,6 @@
 # Bomb Jack Recreation
 
-[Watch the game video](./bombjack-demo.mov)
+https://github.com/user-attachments/assets/fa50e0d2-5cdb-43fb-bd93-28969c5e2dff
 
 ## About
 This is a fan-made recreation of the classic arcade game Bomb Jack. It is developed for educational and showcase purposes only. This project is not affiliated with or endorsed by the original creators or copyright holders of Bomb Jack.
