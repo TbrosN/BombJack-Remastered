@@ -8,6 +8,29 @@ from replace_color import replace_color
 
 
 class Enemy(object):
+    """
+    Base class for all enemies in the game. Handles core properties such as position, state 
+    (frozen, friendly), and collision detection. Enemies can be frozen, during which they flash 
+    and are temporarily harmless to the player.
+    
+    Attributes:
+        w (float): Width of the enemy sprite.
+        h (float): Height of the enemy sprite.
+        timer (float): Timer to track various timed states.
+        bombjack (object): Reference to the player character, Bomb Jack.
+        image (pygame.Surface): The current image of the enemy.
+        sprites (Sprites): Sprites used for animations.
+        collideRadius (float): Radius used for collision detection.
+        frozen (bool): Flag indicating whether the enemy is frozen.
+        freezeTimer (float): Timer for tracking the freeze state.
+        flashTimer (float): Timer for the flashing effect while frozen.
+        flashTime (float): Time interval for flashing when frozen.
+        safeTimer (float): Timer for tracking the friendly state.
+        friendly (bool): Flag indicating whether the enemy is temporarily harmless.
+        safeImage (pygame.Surface): The image displayed when the enemy is in the friendly state.
+        visible (bool): Flag indicating whether the enemy is visible (used during flashing).
+        v (int): Velocity of the enemy.
+    """
     def __init__(self, bombjack):
         self.w = TILEWIDTH*SPRITEFACTOR/2
         self.h = TILEHEIGHT*SPRITEFACTOR/2-1
@@ -26,9 +49,11 @@ class Enemy(object):
         self.visible = True
         self.v = 100
 
-    # Called when the P is collected
-    # Freezes the enemy, temporarily turning it into a coin
     def freeze(self):
+        """
+        Called when the P is collected
+        Freezes the enemy, temporarily turning it into a coin
+        """
         self.frozen = True
         self.image = self.sprites.getImage(0, 4)
         self.safeImage = self.sprites.getStartImage()
@@ -71,9 +96,32 @@ class Enemy(object):
             # pygame.draw.circle(screen, RED, (self.x, self.y), self.collideRadius, 3)
         else:
             pygame.draw.rect(screen, YELLOW, self.get_rect())
+    
+    def collidingWithPlatform(self, rectangle, platList):
+        """
+        Returns true iff the enemy is colliding with a platform
 
+        Args:
+            platList (:obj:`Platform`): List of platforms in the current level
+        """
+        for p in platList:
+            if p.get_rect().colliderect(rectangle):
+                return True
+        return False
 
 class EnemyGroup(object):
+    """
+    Manages a group of enemies in the game. Handles creating enemies from a configuration file,
+    updating their states, rendering them, and respawning them when needed.
+    
+    Attributes:
+        enemyList (list): List of currently active enemies.
+        respawnList (list): List of enemies waiting to be respawned.
+        bombjack (object): Reference to the player character, Bomb Jack.
+        respawnTimer (float): Timer for respawning enemies.
+        row (int): Spawn row location for new enemies.
+        col (int): Spawn column location for new enemies.
+    """
     def __init__(self, enemyfile, bombjack):
         self.enemyList = []
         self.respawnList = []
@@ -85,15 +133,29 @@ class EnemyGroup(object):
         self.col = 0
 
     def createEnemyList(self, enemyfile):
+        """
+        Creates the list of enemies in the level. Enemies are
+        specified in the last row of file, except for birds
+        and mummies, who are placed in the desired location.
+
+        Enemies are specified as follows:
+            - s : Mummy spawner location
+            - b : Bird
+            - c : Club
+            - u : UFO
+            - p : Sphere
+            - o : Orb
+        """
         data = self.readEnemyFile(enemyfile)
         for row in range(data.shape[0]):
             for col in range(data.shape[1]):
+                # Mummy spawner
                 if data[row][col] == 's':
                     self.row = row
                     self.col = col
+                # Bird
                 elif data[row][col] == 'b':
                     self.enemyList.append(Bird(self.bombjack, row, col))
-                # NOTE: Enemies other than birds are put at the last row of the file.
                 # Club
                 if data[row][col] == 'c':
                     mummy = Mummy(self.bombjack, self.row, self.col, None)
@@ -298,17 +360,18 @@ class Club(Enemy):
             self.timer = 0
         dx += self.vx
         dy += self.vy
-        # check for collision
-        for p in platList:
-            # check for collision in x direction
-            if p.get_rect().colliderect(self.x-self.w/2 + dx, self.y, self.w, self.h):
-                self.direction *= -1
-                self.vx *= -1
-                self.timer = 0
-            # check for collision in y direction
-            if p.get_rect().colliderect(self.x-self.w/2, self.y + dy, self.w, self.h):
-                self.vy *= -1
-                self.timer = 0
+
+        movedRectangleX = pygame.Rect(self.x-self.w/2 + dx, self.y, self.w, self.h)
+        movedRectangleY = pygame.Rect(self.x-self.w/2, self.y + dy, self.w, self.h)
+        # check for collision in x direction
+        if self.collidingWithPlatform(movedRectangleX, platList):
+            self.direction *= -1
+            self.vx *= -1
+            self.timer = 0
+        # check for collision in y direction
+        if self.collidingWithPlatform(movedRectangleY, platList):
+            self.vy *= -1
+            self.timer = 0
 
         self.x += dx
         self.y += dy
@@ -358,14 +421,13 @@ class Bird(Enemy):
         dx = self.vx*dt
         dy = self.vy*dt
 
-        # check for collision
-        for p in platList:
-            # check for collision in x direction
-            if p.get_rect().colliderect(self.x-self.w/2 + dx, self.y, self.w, self.h):
-                dx = 0
-            # check for collision in y direction
-            if p.get_rect().colliderect(self.x-self.w/2, self.y + dy, self.w, self.h):
-                dy = 0
+        movedRectangleX = pygame.Rect(self.x-self.w/2 + dx, self.y, self.w, self.h)
+        movedRectangleY = pygame.Rect(self.x-self.w/2, self.y + dy, self.w, self.h)
+        # check for collision in x direction
+        if self.collidingWithPlatform(movedRectangleX, platList):
+            dx = 0
+        if self.collidingWithPlatform(movedRectangleY, platList):
+            dy = 0
 
         self.x += dx
         self.y += dy
@@ -410,12 +472,13 @@ class UFO(Enemy):
         dx = self.vx*dt
         dy = self.vy*dt
 
-        # check for collision
-        for p in platList:
-            if p.get_rect().colliderect(self.x-self.w/2 + dx, self.y, self.w, self.h):
-                self.setVelocity(dx, 0)
-            elif p.get_rect().colliderect(self.x-self.w/2, self.y+dy, self.w, self.h):
-                self.setVelocity(0, dy)
+        movedRectangleX = pygame.Rect(self.x-self.w/2 + dx, self.y, self.w, self.h)
+        movedRectangleY = pygame.Rect(self.x-self.w/2, self.y + dy, self.w, self.h)
+        # check for collision in x direction
+        if self.collidingWithPlatform(movedRectangleX, platList):
+            self.setVelocity(dx, 0)
+        if self.collidingWithPlatform(movedRectangleY, platList):
+            self.setVelocity(0, dy)
 
         dx = self.vx*dt
         dy = self.vy*dt
@@ -460,16 +523,16 @@ class Orb(Enemy):
         dx += self.vx
         dy += self.vy
 
-        # check for collision
-        for p in platList:
-            # check for collision in x direction
-            if p.get_rect().colliderect(self.x-self.w/2 + dx, self.y, self.w, self.h):
-                self.direction *= -1
-                self.vx *= -1
-            # check for collision in y direction
-            elif p.get_rect().colliderect(self.x-self.w/2, self.y + dy, self.w, self.h):
-                self.vy *= -1
-                self.timer = 0
+        movedRectangleX = pygame.Rect(self.x-self.w/2 + dx, self.y, self.w, self.h)
+        movedRectangleY = pygame.Rect(self.x-self.w/2, self.y + dy, self.w, self.h)
+        # check for collision in x direction
+        if self.collidingWithPlatform(movedRectangleX, platList):
+            self.direction *= -1
+            self.vx *= -1
+        # check for collision in y direction
+        if self.collidingWithPlatform(movedRectangleY, platList):
+            self.vy *= -1
+            self.timer = 0
 
         self.x += dx
         self.y += dy
@@ -510,18 +573,18 @@ class Sphere(Enemy):
 
         dx += self.vx
         dy += self.vy
-
-        # check for collision
-        for p in platList:
-            # check for collision in x direction
-            if p.get_rect().colliderect(self.x-self.w/2 + dx, self.y, self.w, self.h):
-                self.vx *= -1
-                self.timer = 0
-            # check for collision in y direction
-            elif p.get_rect().colliderect(self.x-self.w/2, self.y + dy, self.w, self.h):
-                self.direction *= -1
-                self.vy *= -1
-                self.timer = 0
+        
+        movedRectangleX = pygame.Rect(self.x-self.w/2 + dx, self.y, self.w, self.h)
+        movedRectangleY = pygame.Rect(self.x-self.w/2, self.y + dy, self.w, self.h)
+        # check for collision in x direction
+        if self.collidingWithPlatform(movedRectangleX, platList):
+            self.vx *= -1
+            self.timer = 0
+        # check for collision in y direction
+        if self.collidingWithPlatform(movedRectangleY, platList):
+            self.direction *= -1
+            self.vy *= -1
+            self.timer = 0
 
         self.x += dx
         self.y += dy
