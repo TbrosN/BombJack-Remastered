@@ -1,4 +1,4 @@
-# NOTE: This code was inspired by Jonathan Richards' Pacmancode tutorial.
+# NOTE: The code in this file was inspired by Jonathan Richards' Pacmancode tutorial.
 
 import pygame
 from constants import *
@@ -6,6 +6,24 @@ from math import floor
 
 
 class Text(object):
+    """
+    A class to represent a text object in a Pygame environment.
+
+    Attributes:
+        id (int, optional): The identifier for the text object. Default is None.
+        text (str): The string to be displayed.
+        color (tuple): The color of the text, represented as an RGB tuple.
+        x (int): The x-coordinate of the text's position on the screen.
+        y (int): The y-coordinate of the text's position on the screen.
+        size (int): The font size of the text.
+        time (int, optional): The duration (in milliseconds) the text should be displayed. Default is None (indefinite).
+        visible (bool): A flag indicating whether the text is visible or not. Default is True.
+        timer (int): Keeps track of the time elapsed since the text was created.
+        lifespan (int, optional): The lifespan of the text. If set, the text will disappear after this time.
+        label (pygame.Surface): The rendered text surface.
+        destroy (bool): A flag indicating whether the text should be removed.
+        font (pygame.font.Font): The font used to render the text.
+    """
     def __init__(self, text, color, x, y, size, time=None, id=None, visible=True):
         self.id = id
         self.text = text
@@ -46,6 +64,14 @@ class Text(object):
 
 
 class TextGroup(object):
+    """
+    A class to manage multiple Text objects and render them as a group in a Pygame environment.
+
+    Attributes:
+        nextid (int): The next available ID for a new text object.
+        alltext (dict): A dictionary mapping text IDs to their respective Text objects.
+        highscore (str): The high score read from a file.
+    """
     def __init__(self):
         self.nextid = -1
         self.alltext = {}

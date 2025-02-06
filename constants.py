@@ -38,11 +38,4 @@ FREEZETIME = 6
 FLASHTIME = .3
 # Number of on and offs, counted separately
 NUMFLASHES = 4
-# The time that the user is safe, measured in FLASHTIMEs
-SAFETIME = FLASHTIME*2
-RESPAWNTIME = FREEZETIME
-
-SCORETXT = 0
-ROUNDTXT = 1
-HIGHSCORETXT = 2
-TEXTTIME = .3
+# The time that the user is safe, me

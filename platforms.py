@@ -6,6 +6,23 @@ from math import ceil
 
 
 class Platform(object):
+    """Represents a platform object in the game.
+
+    A platform can be horizontal or vertical and is defined by its position, size, level, and orientation.
+    The platform has a gradient color scheme based on the game level.
+
+    Attributes:
+        x (float): The x-coordinate of the platform.
+        y (float): The y-coordinate of the platform.
+        w (float): The width of the platform.
+        h (float): The height of the platform.
+        level (int): The game level the platform belongs to.
+        orientation (int): The orientation of the platform, where 0 is horizontal, and -1 or 1 are vertical.
+        image (Surface): The image of the platform.
+        sheet (Surface): The spritesheet used for loading colors.
+        colors (list): The list of colors for different levels.
+    """
+    
     def __init__(self, x, y, w, h, level, orientation=0):
         self.x = x
         self.y = y-PLATFORMSIZE/2

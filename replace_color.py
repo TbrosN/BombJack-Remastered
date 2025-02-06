@@ -1,10 +1,14 @@
 import pygame
 
-# Replaces the color c1 by c2 for a surface.
-# Inspired by kevintodisco on Game Development Stack Exchange:
-# https://gamedev.stackexchange.com/questions/26550/how-can-a-pygame-image-be-colored
+"""
 
+    Helper functions that replace one color with another in a surface.
 
+    Inspired by kevintodisco on Game Development Stack Exchange:
+    https://gamedev.stackexchange.com/questions/26550/how-can-a-pygame-image-be-colored
+"""
+
+# Replaces color c1 with c2
 def replace_color(surface, c1, c2):
     arr = pygame.surfarray.pixels3d(surface)
     for row in arr:

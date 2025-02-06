@@ -12,6 +12,11 @@ from text import TextGroup
 
 
 class GameController(object):
+    """
+    Controls the overall game flow and mechanics, including player movement, 
+    enemies, platforms, power-ups, and rendering. Manages game state, levels, 
+    rounds, and the main game loop.
+    """
     def __init__(self):
         pygame.init()
         self.screen = pygame.Surface(SCREENSIZE)
