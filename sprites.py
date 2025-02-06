@@ -2,6 +2,10 @@ import pygame
 from constants import *
 import numpy as np
 from animation import Animator
+from constants import SPRITESHEET_FILE
+
+"""Module for extracting sprites from a spritesheet.
+"""
 
 BASETILEWIDTH = 20/SPRITEFACTOR
 BASETILEHEIGHT = 20/SPRITEFACTOR
@@ -10,8 +14,23 @@ BGTILESIZE = 224
 
 
 class Spritesheet(object):
+    """A class for extracting and manipulating sprites from a spritesheet.
+
+    Attributes:
+        sheet (pygame.Surface): The loaded and processed spritesheet image.
+        startImage (pygame.Surface): The initial image of the sphere.
+        animations (dict): A dictionary of animations for the sphere.
+        stopimage (pygame.Surface): The static image of the sphere.
+    
+    Methods:
+        getStartImage(self)
+        getImage(self, x, y)
+        defineAnimations(self)
+        update(self, dt)
+        reset(self)
+    """
     def __init__(self):
-        self.sheet = pygame.image.load("spritesheets/spritesheet_bombjack8.png").convert()
+        self.sheet = pygame.image.load(SPRITESHEET_FILE).convert()
         transcolor = self.sheet.get_at((0, 0))
         # print(transcolor)
         self.sheet.set_colorkey(transcolor)
@@ -27,6 +46,11 @@ class Spritesheet(object):
 
 
 class BGSpritesheet(object):
+    """A class for handling background sprites from a spritesheet.
+
+    Attributes:
+        sheet (pygame.Surface): The loaded and processed background spritesheet image.
+    """
     def __init__(self):
         self.sheet = pygame.image.load("spritesheets/spritesheet_background.png").convert()
         width = int(self.sheet.get_width()/BGTILESIZE*SCREENWIDTH)

@@ -1,3 +1,7 @@
+"""
+This file contains constants used throughout this project.
+"""
+
 # (25, 27)
 TILEWIDTH = 25
 TILEHEIGHT = 30
@@ -9,6 +13,7 @@ SCREENHEIGHT = NROWS*TILEHEIGHT
 PLATFORMSIZE = min(TILEHEIGHT, TILEWIDTH)*3/4
 SCREENSIZE = (SCREENWIDTH, SCREENHEIGHT-PLATFORMSIZE)
 
+SPRITESHEET_FILE = "spritesheets/spritesheet_bombjack8.png"
 SPRITEFACTOR = 5/3
 NUMLEVELS = 5
 NUMLIVES = 5
@@ -19,7 +24,6 @@ WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
-
 
 BOMBJACK = 0
 PCHERRIES = 11
