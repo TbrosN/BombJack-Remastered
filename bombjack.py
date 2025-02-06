@@ -106,35 +106,4 @@ class Bombjack(object):
                     score = 10
                 elif self.vy >= 0:
                     dy = p.get_rect().top - self.get_rect().bottom
-                    self.vy = 0
-                    self.jumped = False
-
-        self.x += dx
-        self.y += dy
-        return score
-
-    def eatCherries(self, cherryList):
-        for cherry in cherryList:
-            if self.collideCheck(cherry):
-                return cherry
-        return None
-
-    def collideCheck(self, other):
-        dx = self.x - other.x
-        dy = self.y - other.y
-        dSquared = dx * dx + dy * dy
-        rSquared = (self.collideRadius + other.collideRadius) ** 2
-        return dSquared <= rSquared
-
-    def get_rect(self):
-        return pygame.Rect(self.x - self.w / 2, self.y, self.w, self.h)
-
-    def render(self, screen):
-        if self.image is not None:
-            if self.poweredUp:
-                copy = self.image.copy()
-                replace_all_colors(copy, (255, 255, 0))
-                self.image = copy
-            screen.blit(self.image, (self.x - self.w, self.y - self.h))
-        else:
-            pygame.draw.rect(screen, YELLOW, self.get_rect())
+  

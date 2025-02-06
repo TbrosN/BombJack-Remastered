@@ -91,45 +91,4 @@ class TextGroup(object):
         size = round(TILEHEIGHT/2)
         self.alltext[SCORETXT] = Text("0".zfill(8), WHITE, 0, 2*size, size)
         self.alltext[ROUNDTXT] = Text("1", WHITE, SCREENWIDTH/2 -
-                                      TILEWIDTH, SCREENHEIGHT+3*TILEHEIGHT, size)
-        self.alltext[HIGHSCORETXT] = Text(self.highscore.zfill(
-            8), WHITE, SCREENWIDTH-10*size, 2*size, size)
-        self.alltext[3] = Text("SCORE", WHITE, 0, size-5, size)
-        self.alltext[4] = Text("ROUND", WHITE, SCREENWIDTH/2-2 *
-                               TILEWIDTH, SCREENHEIGHT+2*TILEHEIGHT, size)
-        self.alltext[5] = Text("HI-SCORE", WHITE, SCREENWIDTH-10*size, size, size)
-        self.nextid = 6
-
-    def update(self, dt):
-        for tkey in list(self.alltext.keys()):
-            self.alltext[tkey].update(dt)
-            if self.alltext[tkey].destroy:
-                self.removeText(tkey)
-
-    def showText(self, id):
-        self.hideText()
-        self.alltext[id].visible = True
-
-    def hideText(self):
-        pass
-
-    def updateScore(self, score):
-        self.updateText(SCORETXT, str(score).zfill(8))
-        if score > int(self.highscore):
-            self.highscore = str(score)
-            self.updateText(HIGHSCORETXT, self.highscore.zfill(8))
-
-    def setHighScore(self):
-        with open('highscore.txt', 'w') as f:
-            f.write(self.highscore)
-
-    def updateRound(self, round):
-        self.updateText(ROUNDTXT, str(round))
-
-    def updateText(self, id, value):
-        if id in self.alltext.keys():
-            self.alltext[id].setText(value)
-
-    def render(self, screen):
-        for tkey in list(self.alltext.keys()):
-            self.alltext[tkey].render(screen)
+                                      TILEWIDTH, SCREENHEIGH

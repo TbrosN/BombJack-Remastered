@@ -487,4 +487,104 @@ class UFO(Enemy):
         self.y += dy
 
 
-class Orb(Ene
+class Orb(Enemy):
+    def __init__(self, bombjack, x, y, mummy):
+        Enemy.__init__(self, bombjack)
+        self.mummy = mummy
+        self.x = x
+        self.y = y
+        self.vx = 0
+        self.vy = 0
+        self.v = 150
+        self.sprites = OrbSprites(self)
+        self.image = self.sprites.getImage(15, 3)
+        self.direction = 1
+        self.timer = 0
+        self.time = 1
+
+    def update(self, dt, platList):
+        if self.frozen:
+            self.updateFreeze(dt)
+            return
+        if self.friendly:
+            self.updateSafe(dt)
+            return
+        self.sprites.update(dt)
+        dx = 0
+        dy = 0
+
+        self.timer += dt
+        if self.timer >= self.time:
+            diffy = self.bombjack.y-self.y
+            self.vx = self.v*dt*self.direction
+            self.vy = self.v*diffy/200*dt
+            self.timer = 0
+
+        dx += self.vx
+        dy += self.vy
+
+        movedRectangleX = pygame.Rect(self.x-self.w/2 + dx, self.y, self.w, self.h)
+        movedRectangleY = pygame.Rect(self.x-self.w/2, self.y + dy, self.w, self.h)
+        # check for collision in x direction
+        if self.collidingWithPlatform(movedRectangleX, platList):
+            self.direction *= -1
+            self.vx *= -1
+        # check for collision in y direction
+        if self.collidingWithPlatform(movedRectangleY, platList):
+            self.vy *= -1
+            self.timer = 0
+
+        self.x += dx
+        self.y += dy
+
+
+class Sphere(Enemy):
+    def __init__(self, bombjack, x, y, mummy):
+        Enemy.__init__(self, bombjack)
+        self.mummy = mummy
+        self.x = x
+        self.y = y
+        self.vx = 0
+        self.vy = 0
+        self.v = 150
+        self.sprites = SphereSprites(self)
+        self.image = self.sprites.getImage(15, 3)
+        self.direction = 1
+        self.timer = 0
+        self.time = 2/30
+
+    def update(self, dt, platList):
+        if self.frozen:
+            self.updateFreeze(dt)
+            return
+        if self.friendly:
+            self.updateSafe(dt)
+            return
+        self.sprites.update(dt)
+        dx = 0
+        dy = 0
+
+        self.timer += dt
+        if self.timer >= self.time:
+            diffx = self.bombjack.x-self.x
+            self.vx = self.v*diffx/200*dt
+            self.vy = self.v*self.direction*dt
+            self.timer = 0
+
+        dx += self.vx
+        dy += self.vy
+        
+        movedRectangleX = pygame.Rect(self.x-self.w/2 + dx, self.y, self.w, self.h)
+        movedRectangleY = pygame.Rect(self.x-self.w/2, self.y + dy, self.w, self.h)
+        # check for collision in x direction
+        if self.collidingWithPlatform(movedRectangleX, platList):
+            self.vx *= -1
+            self.timer = 0
+        # check for collision in y direction
+        if self.collidingWithPlatform(movedRectangleY, platList):
+            self.direction *= -1
+            self.vy *= -1
+            self.timer = 0
+
+        self.x += dx
+        self.y += dy

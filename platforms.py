@@ -162,25 +162,4 @@ class PlatformGroup(object):
 
     def connectVertically(self, data):
         dataT = data.transpose()
-        for col in list(range(dataT.shape[0])):
-
-            for row in list(range(dataT.shape[1])):
-                x = col*TILEWIDTH
-                y = -1
-                h = 0
-                w = PLATFORMSIZE
-                if dataT[col][row] == self.platSymbol:
-                    if y == -1:
-                        y = row*TILEHEIGHT
-                    h += TILEHEIGHT
-                    if row + 1 == len(list(range(dataT.shape[1]))):
-                        self.platList.append(Platform(x, y, w, h, self.level))
-                else:
-                    if y != -1:
-                        self.platList.append(Platform(x, y, w, h, self.level))
-                        y = -1
-                        h = 0
-
-    def render(self, screen):
-        for plat in self.platList:
-            plat.render(screen)
+        fo
