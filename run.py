@@ -234,4 +234,12 @@ class GameController(object):
         self.textgroup.render(self.screen2)
         for i in range(self.lives-1):
             self.screen2.blit(self.livesImage,
-                        
+                              (i*TILEWIDTH*SPRITEFACTOR, SCREENHEIGHT+2*TILEHEIGHT))
+        pygame.display.update()
+
+
+if __name__ == "__main__":
+    game = GameController()
+    game.startGame()
+    while True:
+        game.update()

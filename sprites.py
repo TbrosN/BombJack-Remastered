@@ -486,4 +486,27 @@ class SphereSprites(Spritesheet):
         else:
             self.startImage = image
 
-    def getStar
+    def getStartImage(self):
+        return self.startImage
+
+    def getImage(self, x, y):
+        return Spritesheet.getImage(self, SPRITEFACTOR*x, SPRITEFACTOR*y, SPRITEFACTOR*TILEWIDTH, SPRITEFACTOR*TILEHEIGHT)
+
+    def defineAnimations(self):
+        imgs = []
+        for i in range(9):
+            imgs.append((i, 2))
+        self.animations['MOVE'] = Animator(imgs)
+
+    def update(self, dt):
+        e = self.enemy
+        image = self.getImage(*self.animations['MOVE'].update(dt))
+        if e.direction > 0:
+            image = pygame.transform.flip(image, True, False)
+            image.set_colorkey(image.get_at((0, 0)))
+        e.image = image
+        self.stopimage = (14, 2)
+
+    def reset(self):
+        for key in list(self.animations.keys()):
+            self.animations[key].reset()

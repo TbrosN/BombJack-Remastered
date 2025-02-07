@@ -26,4 +26,5 @@ def replace_all_colors(surface, c):
     for row in arr:
         for p in row:
             # If it is not transparent
-            if (p[0],
+            if (p[0], p[1], p[2]) != transcolor:
+                (p[0], p[1], p[2]) = c

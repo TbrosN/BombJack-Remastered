@@ -45,4 +45,35 @@ class PowerCoin(object):
         dx = self.vx * dt
         dy = self.vy * dt
 
-        # Check for collisions with
+        # Check for collisions with platforms and change direction
+        for p in platList:
+            # X-axis collision
+            if p.get_rect().colliderect(self.x - self.w / 2 + dx, self.y, self.w, self.h):
+                dx = 0
+                self.vx *= -1  # Reverse direction on collision
+            # Y-axis collision
+            if p.get_rect().colliderect(self.x - self.w / 2, self.y + dy, self.w, self.h):
+                dy = 0
+                self.vy *= -1  # Reverse direction on collision
+
+        # Apply updated positions
+        self.x += dx
+        self.y += dy
+
+    def updatePower(self, dt):
+        if self.bombjack.poweredUp:
+            self.timer += dt
+
+        if self.timer >= FREEZETIME:
+            self.bombjack.poweredUp = False
+            self.timer = 0
+
+    def get_rect(self):
+        return pygame.Rect(self.x - self.w / 2, self.y - self.h / 2, self.w, self.h)
+
+    def render(self, screen):
+        if self.visible:
+            screen.blit(self.image, (self.x - self.w, self.y - self.h))
+            # Uncomment to draw debug shapes
+            # pygame.draw.rect(screen, YELLOW, self.get_rect(), 3)
+            # pygame.draw.circle(screen, RED, (self.x, self.y), self.collideRadius, 3)
